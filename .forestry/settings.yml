@@ -8,8 +8,8 @@ sections:
   path: blog
   label: Blog
   create: all
-  match: "**/*"
-  new_doc_ext: ".md"
+  match: "**/*.md"
+  new_doc_ext: md
 - type: directory
   path: docs
   label: General Docs
