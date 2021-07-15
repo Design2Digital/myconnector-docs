@@ -17,7 +17,7 @@ module.exports = {
       title: 'MyConnector Docs',
       logo: {
         alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        src: 'https://avatars.githubusercontent.com/u/69260592?s=400&u=d88f187c8fd05ba14490bcfd68d642c403b5a723&v=4',
       },
       items: [
         {
@@ -31,7 +31,7 @@ module.exports = {
           position: 'left',
           label: 'Open API docs'
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        { to: '/blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/facebook/docusaurus',
           label: 'GitHub',
@@ -96,8 +96,8 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
+          editCurrentVersion: false,
+          editLocalizedFiles: false
         },
         blog: {
           showReadingTime: true,
@@ -135,5 +135,4 @@ module.exports = {
       },
     ]
   ],
-  
 };
