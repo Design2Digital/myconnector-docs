@@ -7,12 +7,6 @@ info:
     This document covers the current functionality of the MyConnector API.
 
     We are still working on it so please send suggestions to [tech@gofetchonline.com](mailto:tech@gofetchonline.com)
-    You can find out more about Swagger at
-    [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).
-    For this sample, you can use the api key `special-key` to test the authorization filters.
-
-    # Introduction
-    This API is documented in **OpenAPI format** and is based on
 
     # OpenAPI Specification
     This API is documented in **OpenAPI format**.
