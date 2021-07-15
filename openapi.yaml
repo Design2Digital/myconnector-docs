@@ -77,24 +77,40 @@ paths:
         - lang: 'PHP'
           source: |
             <?php
+            // your api key
+            $apiKey = 'xxxxxxxx-xxxx-4c52-xxxxx-d186xxx';
             //The url you wish to send the POST request to
-            $apiKey = 'xxxxxxxx-xxxx-4c52-xxxxx-d186xxx'; // your api key
-            $url = 'https://myconnector.online/api/forms/workflow/<workflow name>?apiKey='.$apiKey
-
+            $url = 'http://localhost:3000/api/forms/workflow/someworkflowname';
+            
+            $postData;
+            // echo $_SERVER["CONTENT_TYPE"];
             //The data you want to send via POST
-            $fields = [
-                'email '=> $_POST['email'],
-            ];
+            if($_SERVER["CONTENT_TYPE"] == 'application/json') {
+                $postData = json_decode(file_get_contents('php://input'), true);
+            }
+            
+            if ($_SERVER["CONTENT_TYPE"] == 'application/x-www-form-urlencoded') {
+                $postData = $_POST;
+            } else {
+                echo "";
+                die("Error: Unknown Content-Type");
+            }
+
+            // implement some other checks on the POST request
 
             //encode json for POST request
-            $payload = json_encode($fields);
+            $payload = json_encode($postData);
+            //specify the auth header
+            $auth_header = 'Authorization: '.$apiKey;
 
             //open connection
             $ch = curl_init();
 
-            //set the url, content-type header, number of POST vars, POST data
+            //set the url
             curl_setopt($ch,CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/json"));
+            // load the content-type and auth_header
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json', $auth_header));
+            //set method to post and set payload.
             curl_setopt($ch,CURLOPT_POST, true);
             curl_setopt($ch,CURLOPT_POSTFIELDS, $payload);
 
@@ -105,30 +121,11 @@ paths:
             $result = curl_exec($ch);
 
             // do something with result, like redirect to annother page :)
+            echo $result;
 
+            //remember to close the connection too
+            curl_close($ch)
             ?>
-        - lang: HTML
-          source: |
-            <!DOCTYPE html>
-            <html>
-                <head>
-                    <title>Some Customer Facing Form</title>
-                    <!-- Not Recommeneded as you would be exposing your apiKey for myconnector.online -->
-                </head>
-                <body>
-                    <h1>Some Customer Facing Form</h1>
-                    <form method="POST" action="http://myconnector.online/api/forms/workflow/<workflow name>?apiKey=xxxxxxxx-xxxx-4c52-xxxxx-d186xxx">
-                        <input type="hidden" value="" name="unique_id" id="unique_id"/>
-                        <input type="hidden" value="https://example.com/" name="redirect_uri"/> <!-- Optional Redirect after succesful submission :) -->
-                        <input type="email" value="" name="email" placeholder="Email"/>
-                        <button type="submit">Submit</button>
-                    </form>
-                </body>
-                <script type="module">
-                    import { nanoid } from 'https://unpkg.com/nanoid@3.1.23/index.prod.js?module';
-                    document.getElementById("unique_id").value = nanoid(); // it is optional to generate a random ID for each form submission.
-                </script>
-            </html>
       requestBody:
         $ref: '#/components/requestBodies/Workflow'
 components:
