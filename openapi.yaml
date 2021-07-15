@@ -1,0 +1,207 @@
+openapi: '3.0.0'
+servers:
+  - url: //petstore.swagger.io/v2
+    description: Default server
+  - url: //petstore.swagger.io/sandbox
+    description: Sandbox server
+info:
+  description: |
+    This is a sample server Petstore server.
+    You can find out more about Swagger at
+    [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).
+    For this sample, you can use the api key `special-key` to test the authorization filters.
+
+    # Introduction
+    This API is documented in **OpenAPI format** and is based on
+
+    # OpenAPI Specification
+    This API is documented in **OpenAPI format**.
+    It was **extended** to illustrate features of [generator-openapi-repo](https://github.com/Rebilly/generator-openapi-repo)
+    tool and [ReDoc](https://github.com/Redocly/redoc) documentation. In addition to standard
+    OpenAPI syntax we use a few [vendor extensions](https://github.com/Redocly/redoc/blob/master/docs/redoc-vendor-extensions.md).
+
+    # Cross-Origin Resource Sharing
+    This API features Cross-Origin Resource Sharing (CORS) implemented in compliance with  [W3C spec](https://www.w3.org/TR/cors/).
+    And that allows cross-domain communication from the browser.
+    All responses have a wildcard same-origin which makes them completely public and accessible to everyone, including any code on any site.
+
+    # Authentication
+
+    MyConnector offers currently only offers one form of authentication:
+      - **API Key**
+    
+    But we are planning to add **OAuth2** at some stage
+
+    <SecurityDefinitions />
+
+  version: 1.0.0
+  title: MyConnector Swagger Api Docs
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    name: API Support
+    email: tech@gofetch.online
+    url: https://github.com/Design2Digital
+  x-logo:
+    url: 'https://avatars.githubusercontent.com/u/69260592?s=200&v=4'
+    altText: MyConnector logo
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+externalDocs:
+  description: Find out how to create Github repo for your OpenAPI spec.
+  url: 'https://github.com/Rebilly/generator-openapi-repo'
+tags:
+  - name: workflows_form_api
+    description: Everything about your triggering workflows for you forms!
+security:
+  - 'ApiKeyQuery': []
+  - 'ApiKeyHeader': []
+x-tagGroups:
+  - name: Workflow
+    tags:
+      - worfklow
+      - form
+paths:
+  /forms/workflow/{workflow_name}:
+    post:
+      tags:
+        - worfklow
+      summary: Trigger A Workflow
+      description: Submit data to be used in workflow.
+      parameters:
+        - in: 'path'
+          name: workflow_name
+          schema: 'string'
+      responses:
+        '401':
+          description: Invalid Api Key
+        '304':
+          description: If redirect_uri is set, a 304 response that redirects to the specified redirect_uri
+        '200':
+          description: Successfully submitted data
+      x-codeSamples:
+        - lang: 'PHP'
+          source: |
+            <?php
+            //The url you wish to send the POST request to
+            $apiKey = 'xxxxxxxx-xxxx-4c52-xxxxx-d186xxx'; // your api key
+            $url = 'https://myconnector.online/api/forms/workflow/<workflow name>?apiKey='.$apiKey
+
+            //The data you want to send via POST
+            $fields = [
+                'email '=> $_POST['email'],
+            ];
+
+            //encode json for POST request
+            $payload = json_encode($fields);
+
+            //open connection
+            $ch = curl_init();
+
+            //set the url, content-type header, number of POST vars, POST data
+            curl_setopt($ch,CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-type: application/json"));
+            curl_setopt($ch,CURLOPT_POST, true);
+            curl_setopt($ch,CURLOPT_POSTFIELDS, $payload);
+
+            //So that curl_exec returns the contents of the cURL; rather than echoing it
+            curl_setopt($ch,CURLOPT_RETURNTRANSFER, true); 
+
+            //execute post
+            $result = curl_exec($ch);
+
+            // do something with result, like redirect to annother page :)
+
+            ?>
+        - lang: HTML
+          source: |
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Some Customer Facing Form</title>
+                    <!-- Not Recommeneded as you would be exposing your apiKey for myconnector.online -->
+                </head>
+                <body>
+                    <h1>Some Customer Facing Form</h1>
+                    <form method="POST" action="http://myconnector.online/api/forms/workflow/<workflow name>?apiKey=xxxxxxxx-xxxx-4c52-xxxxx-d186xxx">
+                        <input type="hidden" value="" name="unique_id" id="unique_id"/>
+                        <input type="hidden" value="https://example.com/" name="redirect_uri"/> <!-- Optional Redirect after succesful submission :) -->
+                        <input type="email" value="" name="email" placeholder="Email"/>
+                        <button type="submit">Submit</button>
+                    </form>
+                </body>
+                <script type="module">
+                    import { nanoid } from 'https://unpkg.com/nanoid@3.1.23/index.prod.js?module';
+                    document.getElementById("unique_id").value = nanoid(); // it is optional to generate a random ID for each form submission.
+                </script>
+            </html>
+      requestBody:
+        $ref: '#/components/requestBodies/Workflow'
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+    WorkflowPayload:
+      type: object
+      required:
+        - list_id
+        - any
+      example:
+        $ref: '#/components/examples/contact'
+      properties:
+        any:
+          description: Any data that you would like to syndicate to other systems, if the value does not exist in the external system we will create it if possible
+        unique_id:
+          description: optional unique id that we will echo back to you in the response if redirect_uri is not set
+        redirect_uri: 
+          description: A url to redirect the user to after submitting the form. Will respond with code 304. Only specify this if you're not doing anything custom with the response.
+        list_id:
+          description: If the Workflow is used to update *TouchBasePro*, you are required to submit a list_id
+  requestBodies:
+    Workflow:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - description: Worfklow Submission to Form
+                title: Pettie
+              - $ref: '#/components/schemas/WorkflowPayload'
+      description: Any object that needs to be submitted to the workflow
+      required: true
+    UserArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+      description: List of user object
+      required: true
+  securitySchemes:
+    'ApiKeyHeader':
+      description: >
+        Add api key to `Authorization` header
+      type: apiKey
+      name: Authorization
+      in: header
+    'ApiKeyQuery':
+      description: >
+        Add api key to url query `?apiKey={apiKey}`
+      type: apiKey
+      name: apiKey
+      in: query
+  examples:
+    contact:  # <--- example name
+        first_name: John
+        last_name: Doe
+        email: john@example.com,
+        redirect: https://example.com/succesful-form # if you specify this we will automatically redirect your request if it is static html/php
+        list_id: 'new-contact-requests'
