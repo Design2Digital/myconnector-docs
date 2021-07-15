@@ -1,12 +1,12 @@
 openapi: '3.0.0'
 servers:
-  - url: //petstore.swagger.io/v2
+  - url: //myconnector.online/api
     description: Default server
-  - url: //petstore.swagger.io/sandbox
-    description: Sandbox server
 info:
   description: |
-    This is a sample server Petstore server.
+    This document covers the current functionality of the MyConnector API.
+
+    We are still working on it so please send suggestions to [tech@gofetchonline.com](mailto:tech@gofetchonline.com)
     You can find out more about Swagger at
     [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).
     For this sample, you can use the api key `special-key` to test the authorization filters.
