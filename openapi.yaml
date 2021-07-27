@@ -48,7 +48,6 @@ tags:
   - name: workflows_form_api
     description: Everything about your triggering workflows for you forms!
 security:
-  - 'ApiKeyQuery': []
   - 'ApiKeyHeader': []
 x-tagGroups:
   - name: Workflow
@@ -80,7 +79,7 @@ paths:
             // your api key
             $apiKey = 'xxxxxxxx-xxxx-4c52-xxxxx-d186xxx';
             //The url you wish to send the POST request to
-            $url = 'http://localhost:3000/api/forms/workflow/someworkflowname';
+            $url = 'https://myconnector.online/api/forms/workflow/someworkflowname';
             
             $postData;
             // echo $_SERVER["CONTENT_TYPE"];
