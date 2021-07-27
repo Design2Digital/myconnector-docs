@@ -183,12 +183,6 @@ components:
       type: apiKey
       name: Authorization
       in: header
-    'ApiKeyQuery':
-      description: >
-        Add api key to url query `?apiKey={apiKey}`
-      type: apiKey
-      name: apiKey
-      in: query
   examples:
     contact:  # <--- example name
         first_name: John
