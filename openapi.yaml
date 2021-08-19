@@ -47,6 +47,8 @@ externalDocs:
 tags:
   - name: workflows_form_api
     description: Everything about your triggering workflows for you forms!
+  - name: form
+    description: A workflow where data is submitted by form
 security:
   - 'ApiKeyHeader': []
 x-tagGroups:
@@ -127,6 +129,24 @@ paths:
             ?>
       requestBody:
         $ref: '#/components/requestBodies/Workflow'
+  
+  /workflows/batch/run/{workflow_name}:
+    post:
+      tags:
+        - worfklow
+      summary: Trigger A Batch Workflow with a flat file input
+      description: Submit data to be used in a workflow, if the data is going to TouchBasePro, a list will be created based on the workflow title.
+      parameters:
+        - in: 'path'
+          name: workflow_name
+          schema: 'string'
+      responses:
+        '401':
+          description: Invalid Api Key
+        '200':
+          description: Successfully started processing
+      requestBody:
+        $ref: '#/components/requestBodies/WorkflowBatch'
 components:
   schemas:
     ApiResponse:
@@ -155,7 +175,21 @@ components:
           description: optional unique id that we will echo back to you in the response if redirect_uri is not set
         redirect_uri: 
           description: A url to redirect the user to after submitting the form. Will respond with code 304. Only specify this if you're not doing anything custom with the response.
+
   requestBodies:
+    WorkflowBatch:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - file
+            properties:
+              file:
+                type: string
+                format: binary
+                description: csv file containing with data to be processed.
+            
     Workflow:
       content:
         application/json:
