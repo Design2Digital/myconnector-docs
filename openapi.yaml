@@ -60,7 +60,7 @@ paths:
       tags:
         - worfklow
       summary: Trigger A Workflow
-      description: Submit data to be used in workflow.
+      description: Submit data to be used in a workflow, if the data is going to TouchBasePro, a list will be created based on the workflow title.
       parameters:
         - in: 'path'
           name: workflow_name
@@ -142,19 +142,19 @@ components:
     WorkflowPayload:
       type: object
       required:
-        - list_id
+        - consent_to_track
         - any
       example:
         $ref: '#/components/examples/contact'
       properties:
         any:
           description: Any data that you would like to syndicate to other systems, if the value does not exist in the external system we will create it if possible
+        consent_to_track:
+          description: Consent to be contacted and consent to track link opens in communications.
         unique_id:
           description: optional unique id that we will echo back to you in the response if redirect_uri is not set
         redirect_uri: 
           description: A url to redirect the user to after submitting the form. Will respond with code 304. Only specify this if you're not doing anything custom with the response.
-        list_id:
-          description: If the Workflow is used to update *TouchBasePro*, you are required to submit a list_id
   requestBodies:
     Workflow:
       content:
@@ -162,7 +162,7 @@ components:
           schema:
             allOf:
               - description: Worfklow Submission to Form
-                title: Pettie
+                title: Workflow
               - $ref: '#/components/schemas/WorkflowPayload'
       description: Any object that needs to be submitted to the workflow
       required: true
@@ -187,5 +187,4 @@ components:
         first_name: John
         last_name: Doe
         email: john@example.com,
-        redirect: https://example.com/succesful-form # if you specify this we will automatically redirect your request if it is static html/php
-        list_id: 'new-contact-requests'
+        redirect_uri: https://example.com/succesful-form # if you specify this we will automatically redirect your request if it is static html/php
